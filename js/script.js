@@ -117,9 +117,20 @@ var createPaginationLinks = function(){
 var searchList = function() {
 	// grab the search field value
 	var searchField = document.getElementById('search-field');
+	// check to see if the no match message exists
+	var nomatch = document.getElementById('no-match'); 
 	
 	// build an array of all the students with .student-details class
 	var studentDetails = document.getElementsByClassName('student-details');
+	
+	// remove no match message if it exists; otherwise, build element
+	if (nomatch !== null) {
+		theList.removeChild(nomatch);
+	} else {
+		nomatch = document.createElement('h3');
+		nomatch.innerText = 'Unfortunately your query didn\'t match any students.';
+		nomatch.setAttribute('id', 'no-match');
+	}
 	
 	// first check to see if the search field has a value
 	if (searchField && searchField.value) {
@@ -143,12 +154,36 @@ var searchList = function() {
 				email.parentElement.parentElement.classList.add('no-search');
 			}
 		}
-		// rebuild the pagination links
-		buildPagination();
+		
+		// find the difference in length between .student-item class and .no-search class
+		var lengthDiff = (document.querySelectorAll('li.student-item').length - document.querySelectorAll('li.no-search').length);
+		
+		// there are no matches if lengthDiff = 0
+		if (lengthDiff === 0) {
+			// Add our no match error
+			theList.prepend(nomatch);
+				
+			// no need for page numbers if searches are empty
+			theList.removeChild(getPagination());
+		} else if (lengthDiff < 10) {
+			// no need for page numbers if searches are fewer than 10
+			theList.removeChild(getPagination());
+		} else {
+			// rebuild the pagination links
+			buildPagination();
+		}
+
 	} else {
 		// resetting so that all students will show when search field is empty
 		resetPage();
 	}
+}
+
+// call multiple times to rebuild pagination
+var getPagination = function() {
+	var pagination = document.getElementById('pagination');
+	
+	return pagination;
 }
 
 // reset the page so all items show
@@ -168,7 +203,7 @@ var resetPage = function() {
 var buildPagination = function() {
 	var pagination = document.getElementById('pagination');
 	
-	if (pagination !== null) {
+	if (getPagination() !== null) {
 		theList.removeChild(pagination);
 	}
 	
