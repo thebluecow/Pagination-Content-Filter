@@ -115,6 +115,8 @@ var createPaginationLinks = function(){
 
 // Called when search button is clicked
 var searchList = function() {
+	clearStudentItem();
+	
 	// grab the search field value
 	var searchField = document.getElementById('search-field');
 	// check to see if the no match message exists
@@ -171,6 +173,9 @@ var searchList = function() {
 		} else {
 			// rebuild the pagination links
 			buildPagination();
+			
+			// show initial 10 students
+			showListElements(1);
 		}
 
 	} else {
@@ -188,15 +193,24 @@ var getPagination = function() {
 
 // reset the page so all items show
 var resetPage = function() {
+	// ensure all items in with .student-item class will show
+	clearStudentItem();
+	
+	// rebuild the pagination after removing .no-search clas
+	buildPagination();
+	
+	// show initial 10 students
+	showListElements(1);
+}
+
+var clearStudentItem = function() {
 	// instead of .no-search filter, clear out the entire .student-list items
 	var studentItemList = document.getElementsByClassName('student-item');
 	
 	for (var i = 0; i < studentItemList.length; i++) {
 		studentItemList[i].classList.remove('no-search');
+		studentItemList[i].classList.remove('hide-student');
 	}
-	
-	// rebuild the pagination after removing .no-search clas
-	buildPagination();
 }
 
 // create pagination links on page reset and search
@@ -219,8 +233,7 @@ var buildPage = function() {
 	// add search field and button to the header
 	theHeader.prepend(createSearchField());
 	
-	// show initial 10 students
-	showListElements(1);
+	
 }
 
 buildPage();
