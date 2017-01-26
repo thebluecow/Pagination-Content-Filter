@@ -137,7 +137,7 @@ var searchList = function() {
 	// first check to see if the search field has a value
 	if (searchField && searchField.value) {
 		// normalize the searchField to lower case
-		var searchFieldLC = searchField.value.toLowerCase();
+		var searchFieldLC = searchField.value.trim().toLowerCase();
 		
 		// iterate over the studentDetails array
 		for (var i = 0; i < studentDetails.length; i++) {
